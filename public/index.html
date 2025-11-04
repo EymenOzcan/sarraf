@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarraf Döviz & Altın Fiyatları - Canlı Takip</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Premium Background -->
+    <div class="bg-gradient"></div>
+
+    <div class="container">
+        <!-- Premium Header -->
+        <header class="premium-header">
+            <div class="header-left">
+                <div class="logo-section">
+                    <div class="logo-icon">💎</div>
+                    <div class="logo-text">
+                        <h1>SARRAF DÖVIZ</h1>
+                        <p>Kıymetli Madenler & Döviz</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="live-clock">
+                    <div class="clock-time" id="liveClock">--:--:--</div>
+                    <div class="clock-date" id="liveDate">--</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="update-badge">
+                    <svg class="live-indicator" width="12" height="12" viewBox="0 0 12 12">
+                        <circle cx="6" cy="6" r="6" fill="currentColor"/>
+                    </svg>
+                    <span>CANLI</span>
+                </div>
+                <div class="last-update">
+                    <span class="update-label">Son Güncelleme</span>
+                    <span class="update-time" id="lastUpdate">Yükleniyor...</span>
+                </div>
+                <button class="refresh-btn-premium" id="refreshBtn" title="Yenile">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <div class="loading-state-premium" id="loadingState">
+            <div class="spinner-premium"></div>
+            <p>Fiyatlar yükleniyor...</p>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content-premium" id="mainContent" style="display: none;">
+
+            <!-- HAKAN KIYMETLİ MADENLER - Premium Card (TOP PRIORITY) -->
+            <section class="hakan-precious-card" id="hakanPreciousCard" style="display: none;">
+                <div class="hakan-header">
+                    <div class="hakan-title">
+                        <div class="hakan-icon">⚖️</div>
+                        <div>
+                            <h2>HAKAN KIYMETLİ MADENLER</h2>
+                            <p>Londra - İstanbul Altın Karşılaştırması</p>
+                        </div>
+                    </div>
+                    <div class="hakan-badge">
+                        <span>PREMIUM ANALİZ</span>
+                    </div>
+                </div>
+
+                <div class="hakan-comparison">
+                    <div class="hakan-price-box london-box">
+                        <div class="location-badge">🇬🇧 LONDRA</div>
+                        <div class="gold-label">XAU/USD Satış</div>
+                        <div class="gold-price-large" id="hakanLondonPrice">--</div>
+                        <div class="gold-subtitle">Dünya Spot Fiyatı</div>
+                    </div>
+
+                    <div class="hakan-vs">
+                        <div class="vs-circle">
+                            <span>VS</span>
+                        </div>
+                        <div class="difference-arrow" id="hakanArrow">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="hakan-price-box istanbul-box">
+                        <div class="location-badge">🇹🇷 İSTANBUL</div>
+                        <div class="gold-label">XAU Satış</div>
+                        <div class="gold-price-large" id="hakanIstanbulPrice">--</div>
+                        <div class="gold-subtitle">İstanbul Piyasası</div>
+                    </div>
+                </div>
+
+                <div class="hakan-result">
+                    <div class="result-label">FARK (31.99 oz)</div>
+                    <div class="result-amount" id="hakanDifference">--</div>
+                </div>
+            </section>
+
+            <!-- Döviz Kurları Tablosu -->
+            <section class="currency-section">
+                <div class="section-header">
+                    <h2>
+                        <span class="section-icon">💱</span>
+                        DÖVİZ KURLARI
+                    </h2>
+                </div>
+
+                <div class="table-container-premium">
+                    <table class="currency-table-premium">
+                        <thead>
+                            <tr>
+                                <th class="source-col">KAYNAK</th>
+                                <th class="currency-col">
+                                    <div class="currency-header-content">
+                                        <span class="currency-icon">$</span>
+                                        <span>DOLAR</span>
+                                    </div>
+                                </th>
+                                <th class="currency-col">
+                                    <div class="currency-header-content">
+                                        <span class="currency-icon">€</span>
+                                        <span>EURO</span>
+                                    </div>
+                                </th>
+                                <th class="currency-col">
+                                    <div class="currency-header-content">
+                                        <span class="currency-icon">£</span>
+                                        <span>STERLİN</span>
+                                    </div>
+                                </th>
+                                <th class="currency-col">
+                                    <div class="currency-header-content">
+                                        <span class="currency-icon">CHF</span>
+                                        <span>FRANK</span>
+                                    </div>
+                                </th>
+                                <th class="currency-col">
+                                    <div class="currency-header-content">
+                                        <span class="currency-icon">🪙</span>
+                                        <span>ALTIN</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dinamik içerik -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 1KG Altın Karşılaştırması -->
+            <section class="gold-kg-section" id="goldComparisonCard" style="display: none;">
+                <!-- Dinamik içerik -->
+            </section>
+
+        </main>
+
+        <!-- Premium Footer -->
+        <footer class="premium-footer">
+            <div class="footer-content">
+                <p>© 2025 Sarraf Döviz - Tüm hakları saklıdır | Canlı piyasa verileri</p>
+                <div class="footer-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Premium System</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
