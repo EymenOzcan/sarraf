@@ -47,7 +47,7 @@ async function fetchHakanAltin() {
     console.log('🔍 Hakan Altın XAU/USD fiyatları çekiliyor...');
 
     const puppeteerConfig = {
-      headless: true,
+      headless: 'new',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -58,14 +58,13 @@ async function fetchHakanAltin() {
         '--disable-extensions',
         '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding'
+        '--disable-renderer-backgrounding',
+        '--single-process',
+        '--no-zygote',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process'
       ]
     };
-
-    // Render veya production ortamı için executablePath
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      puppeteerConfig.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-    }
 
     browser = await puppeteer.launch(puppeteerConfig);
     const page = await browser.newPage();
@@ -85,11 +84,11 @@ async function fetchHakanAltin() {
 
     await page.goto('https://www.hakanaltin.com/', {
       waitUntil: 'networkidle0',
-      timeout: 20000
+      timeout: 30000
     });
 
     // JavaScript yüklenmesini bekle
-    await page.waitForSelector('#span_ask_129', { timeout: 8000 });
+    await page.waitForSelector('#span_ask_129', { timeout: 15000 });
 
     // Fiyatları çek - XAU/USD ve USD/TRY
     const prices = await page.evaluate(() => {
@@ -127,7 +126,9 @@ async function fetchHakanAltin() {
       };
     });
 
-    await browser.close();
+    if (browser) await browser.close();
+
+    console.log(`🔍 Hakan Altın raw prices:`, prices);
 
     // Değerleri parse et - hem Türk (4.136,00) hem de ABD (4,136.00) formatını destekle
     const parsePrice = (priceStr) => {
@@ -181,8 +182,16 @@ async function fetchHakanAltin() {
 
     return null;
   } catch (error) {
-    console.warn('⚠️  Hakan Altın çekme hatası:', error.message);
-    if (browser) await browser.close().catch(() => {});
+    console.error('❌ Hakan Altın çekme hatası:', error.message);
+    console.error('Stack trace:', error.stack);
+
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error('❌ Browser kapatma hatası:', closeError.message);
+      }
+    }
 
     // Hata durumunda eski cache'i kullan
     if (hakanCache.data) {
