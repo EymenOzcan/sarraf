@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 //cors
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 let currencyCache = {
   lastUpdate: null,
@@ -45,7 +45,8 @@ async function fetchHakanAltin() {
   let browser;
   try {
     console.log('🔍 Hakan Altın XAU/USD fiyatları çekiliyor...');
-    browser = await puppeteer.launch({
+
+    const puppeteerConfig = {
       headless: true,
       args: [
         '--no-sandbox',
@@ -53,9 +54,20 @@ async function fetchHakanAltin() {
         '--disable-dev-shm-usage',
         '--disable-accelerated-2d-canvas',
         '--disable-gpu',
-        '--window-size=1920x1080'
+        '--window-size=1920x1080',
+        '--disable-extensions',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding'
       ]
-    });
+    };
+
+    // Render veya production ortamı için executablePath
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      puppeteerConfig.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+
+    browser = await puppeteer.launch(puppeteerConfig);
     const page = await browser.newPage();
 
     // Sadece image ve font gibi gereksiz kaynakları bloke et (JS ve CSS gerekli!)
