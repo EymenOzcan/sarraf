@@ -4,7 +4,20 @@ const cheerio = require('cheerio');
 const cors = require('cors');
 const cron = require('node-cron');
 const path = require('path');
-const puppeteer = require('puppeteer');
+
+// Render için optimize edilmiş Chromium
+let puppeteer;
+let chromium;
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (isProduction) {
+  // Production (Render): @sparticuz/chromium kullan
+  puppeteer = require('puppeteer-core');
+  chromium = require('@sparticuz/chromium');
+} else {
+  // Development: Normal puppeteer kullan
+  puppeteer = require('puppeteer');
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,8 +60,8 @@ async function fetchHakanAltin() {
     console.log('🔍 Hakan Altın XAU/USD fiyatları çekiliyor...');
 
     const puppeteerConfig = {
-      headless: 'new',
-      args: [
+      headless: chromium ? chromium.headless : 'new',
+      args: chromium ? chromium.args : [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
@@ -63,9 +76,11 @@ async function fetchHakanAltin() {
         '--no-zygote',
         '--disable-web-security',
         '--disable-features=IsolateOrigins,site-per-process'
-      ]
+      ],
+      executablePath: chromium ? await chromium.executablePath() : undefined
     };
 
+    console.log(`🌐 Puppeteer mode: ${isProduction ? 'Production (@sparticuz/chromium)' : 'Development (local)'}`);
     browser = await puppeteer.launch(puppeteerConfig);
     const page = await browser.newPage();
 
