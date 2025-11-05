@@ -801,10 +801,17 @@ async function calculateGoldComparison(averages) {
         worldGoldSource = 'Hakan Altın (Londra XAU/USD)';
         usdTryRateUsed = usdTrySellRate;
       } else {
-        console.warn('⚠️  Hakan Altın verisi eksik veya geçersiz');
+        console.warn('⚠️  Hakan Altın verisi eksik veya geçersiz - dünya fiyatı için Türkiye ortalaması kullanılacak');
+        // Fallback: Türkiye ortalamasını dünya fiyatı olarak kullan
+        worldGoldPerGram = trGoldPerGram;
+        worldGoldSource = 'Türkiye Ortalaması (Hakan Altın verisi alınamadı)';
       }
     } catch (hakanError) {
-      console.warn('⚠️  Hakan Kıymetli Madenler hesaplaması başarısız:', hakanError.message);
+      console.error('❌ Hakan Kıymetli Madenler hesaplaması başarısız:', hakanError.message);
+      console.error('Stack trace:', hakanError.stack);
+      // Fallback: Türkiye ortalamasını dünya fiyatı olarak kullan
+      worldGoldPerGram = trGoldPerGram;
+      worldGoldSource = 'Türkiye Ortalaması (Hakan Altın hatası)';
     }
 
     // Türkiye ve Dünya fiyatları ile karşılaştırma
