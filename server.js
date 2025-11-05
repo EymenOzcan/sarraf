@@ -11,7 +11,6 @@ let chromium;
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (isProduction) {
-  // Production (Render): @sparticuz/chromium kullan
   puppeteer = require('puppeteer-core');
   chromium = require('@sparticuz/chromium');
 } else {
