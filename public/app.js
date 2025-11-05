@@ -97,9 +97,6 @@ function updateUI(data, lastUpdate) {
 
     // Döviz Kurları Tablosunu Güncelle
     updateCurrencyTable(data);
-
-    // 1KG Altın Karşılaştırmasını Güncelle
-    updateGoldComparisonCard(data.goldComparison);
 }
 
 /* ========================================
@@ -263,80 +260,6 @@ function updateCurrencyTable(data) {
 
         tableBody.appendChild(avgRow);
     }
-}
-
-/* ========================================
-   1KG ALTIN KARŞILAŞTIRMASI
-   ======================================== */
-
-function updateGoldComparisonCard(goldComparison) {
-    let comparisonCard = document.getElementById('goldComparisonCard');
-
-    if (!goldComparison) {
-        comparisonCard.style.display = 'none';
-        return;
-    }
-
-    comparisonCard.style.display = 'block';
-
-    const isPricier = parseFloat(goldComparison.difference.amount) > 0;
-    const diffClass = isPricier ? 'negative' : 'positive';
-    const diffIcon = isPricier ? '📈' : '📉';
-
-    comparisonCard.innerHTML = `
-        <div style="margin-bottom: 2rem;">
-            <h2 style="display: flex; align-items: center; gap: 1rem; font-size: 2rem; font-weight: 800; color: var(--white);">
-                <span style="font-size: 2rem;">⚖️</span>
-                1 KG ALTIN KARŞILAŞTIRMASI
-            </h2>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center; margin-bottom: 2rem;">
-
-            <!-- Türkiye -->
-            <div style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #D4AF37, #FFD700);"></div>
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🇹🇷</div>
-                <h4 style="color: rgba(255, 255, 255, 0.4); font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.5rem;">TÜRKİYE</h4>
-                <div style="font-size: 2.5rem; font-weight: 900; color: #FFD700; margin: 1rem 0;">
-                    ${parseFloat(goldComparison.turkey.per1kg).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺
-                </div>
-                <div style="color: rgba(255, 255, 255, 0.6); font-size: 1rem;">${goldComparison.turkey.perGram} ₺/gram</div>
-            </div>
-
-            <!-- VS -->
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-                <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #D4AF37, #B8941F); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: #0F172A; box-shadow: 0 12px 40px rgba(212, 175, 55, 0.6);">
-                    VS
-                </div>
-            </div>
-
-            <!-- Dünya -->
-            <div style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #3B82F6, #2563EB);"></div>
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🌍</div>
-                <h4 style="color: rgba(255, 255, 255, 0.4); font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.5rem;">DÜNYA ${diffIcon}</h4>
-                <div style="font-size: 2.5rem; font-weight: 900; color: #3B82F6; margin: 1rem 0;">
-                    ${parseFloat(goldComparison.world.per1kg).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺
-                </div>
-                <div style="color: rgba(255, 255, 255, 0.6); font-size: 1rem;">${goldComparison.world.perGram} ₺/gram</div>
-                <div style="color: rgba(255, 255, 255, 0.4); font-size: 0.75rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    XAU/USD: $${goldComparison.world.xauUsdPrice}/oz
-                </div>
-                ${goldComparison.world.lastUpdate ? `<div style="color: rgba(255, 255, 255, 0.4); font-size: 0.75rem;">Güncelleme: ${formatUpdateTime(goldComparison.world.lastUpdate)}</div>` : ''}
-            </div>
-        </div>
-
-        <!-- Fark -->
-        <div style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border: 2px solid ${isPricier ? '#EF4444' : '#10B981'}; border-radius: 1rem; padding: 2rem; text-align: center;">
-            <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;">FARK</div>
-            <div style="font-size: 3rem; font-weight: 900; color: ${isPricier ? '#EF4444' : '#10B981'}; margin: 1rem 0;">
-                ${isPricier ? '+' : ''}${parseFloat(goldComparison.difference.amount).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺
-                <span style="font-size: 1.5rem; margin-left: 0.5rem; opacity: 0.8;">(${goldComparison.difference.percent}%)</span>
-            </div>
-            <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.875rem; font-weight: 600;">${goldComparison.difference.status}</div>
-        </div>
-    `;
 }
 
 /* ========================================
